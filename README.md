@@ -1,10 +1,10 @@
 # Quick documentation
+This is quick notes page as reference for useing `bugzilla-cli` command line.  
+**bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
+
 
 - [First Steps](#first-steps)
   * [Querying](#querying)
-
-This is quick notes page as reference for useing `bugzilla-cli` command line.  
-**bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
 
 ## First Steps
 First, go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Keys**. As soon you click: "Generate the API-key" a long string will be generated with chars and numbers, COPY as it's only displayed once.
