@@ -10,7 +10,7 @@ This is quick notes page as reference for useing `bugzilla-cli` command line.
 First, go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Keys**.  
 
 **ATENTION:**  
-As soon you click: "Generate the API-key" a long string will be generated with chars and numbers, COPY as it's only displayed once.
+As soon you click: "**Generate the API-key**" a long string will be generated with chars and numbers, COPY as it's only displayed **ONCE**.
 
 ```
 $ mkdir -p ~/.config/python-bugzilla/ && cd ~/.config/python-bugzilla/ 
