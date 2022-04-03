@@ -1,10 +1,11 @@
 # Quick documentation
 - [First Steps](#first-steps)
+  * [Setting env](#setting-env)
+  * [Bashing](#bashing)
   * [Querying](#querying)
 
 This is quick notes page as reference for useing `bugzilla-cli` command line.  
 **bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
-
 
 ## First Steps
 First, go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Keys**.  
@@ -54,7 +55,7 @@ for dev in ${developers[@]}; do
 done
 ```
 
-Example:
+Output Example:
 ```
 The developer foobar@email.com has 1 assigned  
 The developer devnull@email.com has 2 assigned  
