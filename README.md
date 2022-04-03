@@ -1,3 +1,4 @@
+# Quick documentation
 
 - [First Steps](#first-steps)
   * [Querying](#querying)
