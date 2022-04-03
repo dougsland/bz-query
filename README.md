@@ -1,7 +1,8 @@
+
 - [First Steps](#first-steps)
   * [Querying](#querying)
 
-This is quick notes page as reference for useing `bugzilla-cli` command line.
+This is quick notes page as reference for useing `bugzilla-cli` command line.  
 **bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
 
 ## First Steps
