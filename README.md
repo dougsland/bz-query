@@ -1,5 +1,7 @@
 # bz-query
 
+**bugzilla-cli** project available: https://github.com/python-bugzilla/python-bugzilla
+
 Querying bugs for ovn-kubernetes in **NEW status**
 ```
 ./bugzilla-cli query --product "OpenShift Container Platform"  --component Networking --sub-component ovn-kubernetes --status NEW
