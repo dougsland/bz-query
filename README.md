@@ -19,6 +19,49 @@ $ cat bugzillarc
 api_key=pMqSdofimCiHqqq11111111111111111111113rr           <----- Long string generated once in the step above.
 ```
 
+## Setting env
+```
+$ git clone https://github.com/python-bugzilla/python-bugzilla cd python-bugzilla
+Cloning into 'python-bugzilla'...
+remote: Enumerating objects: 6308, done.
+remote: Counting objects: 100% (246/246), done.
+remote: Compressing objects: 100% (166/166), done.
+remote: Total 6308 (delta 144), reused 148 (delta 75), pack-reused 6062
+Receiving objects: 100% (6308/6308), 1.40 MiB | 3.81 MiB/s, done.
+Resolving deltas: 100% (4285/4285), done.
+```
+
+## Bashing
+```
+$ cd python-bugzilla
+$ cat ./netquery
+```
+#!/bin/bash
+
+developers=("foobar@email.com" \
+        "devnull@email.com" \
+        "supercar@email.com")
+        
+bz_status="NEW"
+
+for dev in ${developers[@]}; do
+    bz_number=$(./bugzilla-cli \
+        query \
+        --product "OpenShift Container Platform" \
+        --component Networking \
+        --sub-component ovn-kubernetes \
+        --status "${bz_status}" | grep -i "${dev}" | wc -l)
+    echo "The developer "${dev}" has ${bz_number} assigned as ${bz_status}"
+done
+```
+
+Example:
+```
+The developer foobar@email.com has 1 assigned
+The developer devnull@email.com has 2 assigned
+The developer supercar@email.com has 2 assigned
+```
+
 ## Querying
 Querying bugs for ovn-kubernetes in **NEW status**
 ```
