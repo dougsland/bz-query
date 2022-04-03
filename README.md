@@ -57,6 +57,7 @@ done
 
 Output Example:
 ```
+python-bugzilla> ./netquery
 The developer foobar@email.com has 1 assigned  
 The developer devnull@email.com has 2 assigned  
 The developer supercar@email.com has 2 assigned  
