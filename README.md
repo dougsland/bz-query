@@ -17,7 +17,7 @@ As soon you click: "**Generate the API-key**" a long string will be generated wi
 $ mkdir -p ~/.config/python-bugzilla/ && cd ~/.config/python-bugzilla/ 
 $ cat bugzillarc
 [bugzilla.redhat.com]
-api_key=pMqSdofimCiHqqq11111111111111111111113rr           <----- Long string generated once in the step above.
+api_key=pMqSdofimCiHqqq11111111111113rr           <----- Long string generated once in the step above.
 ```
 
 ## Setting env
