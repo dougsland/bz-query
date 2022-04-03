@@ -35,7 +35,6 @@ Resolving deltas: 100% (4285/4285), done.
 ```
 $ cd python-bugzilla
 $ cat ./netquery
-```
 #!/bin/bash
 
 developers=("foobar@email.com" \
@@ -57,9 +56,9 @@ done
 
 Example:
 ```
-The developer foobar@email.com has 1 assigned
-The developer devnull@email.com has 2 assigned
-The developer supercar@email.com has 2 assigned
+The developer foobar@email.com has 1 assigned  
+The developer devnull@email.com has 2 assigned  
+The developer supercar@email.com has 2 assigned  
 ```
 
 ## Querying
