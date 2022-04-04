@@ -2,7 +2,9 @@
 - [First Steps](#first-steps)
   * [Setting env](#setting-env)
   * [Bashing](#bashing)
-  * [Querying](#querying)
+  * [Pythonic](#pythonic)
+    + [Query Networking Bugs Script](#query-networking-bugs-script)
+  * [Querying via bugzillacli](#querying-via-bugzillacli)
 
 This is quick notes page as reference for useing `bugzilla-cli` command line.  
 **bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
@@ -34,7 +36,8 @@ $ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugz
 $ popd
 ```
 
-## Query Networking Bugs Script
+## Pythonic
+### Query Networking Bugs Script
 ```
 $ [ -e ./python-bugzilla/env/bin/activate ] && {
   source ./python-bugzilla/env/bin/activate
@@ -75,7 +78,7 @@ The developer devnull@email.com has 2 assigned
 The developer supercar@email.com has 2 assigned  
 ```
 
-## Querying
+## Querying via bugzillacli
 Querying bugs for ovn-kubernetes in **NEW status**
 ```
 ./bugzilla-cli query --product "OpenShift Container Platform"  --component Networking --sub-component ovn-kubernetes --status NEW
