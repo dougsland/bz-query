@@ -22,7 +22,7 @@ api_key=pMqSdofimCiHqqq11113rr           <----- Long string generated once in th
 
 ## Setting env
 ```
-$ git clone https://github.com/python-bugzilla/python-bugzilla cd python-bugzilla
+$ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugzilla
 Cloning into 'python-bugzilla'...
 remote: Enumerating objects: 6308, done.
 remote: Counting objects: 100% (246/246), done.
