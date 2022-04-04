@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+import time
+import bugzilla
+
+from collections import OrderedDict
+
+URL = "bugzilla.redhat.com"
+bzapi = bugzilla.Bugzilla(URL)
+
+query = bzapi.build_query(
+    product="OpenShift Container Platform",
+    component="Networking",
+    include_fields=["id",
+                    "priority",
+                    "severity",
+                    "assigned_to",
+                    "status"])
+# uncomment if looking for specific ovn-kubernetes
+# sub_component="ovn-kubernetes")
+
+developer = {
+        "pliu@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "vrutkovs@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "mcambria@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "jtanenba@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "fpaoline@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "jluhrsen@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "cstabler@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "dcbw@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "trozet@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "jcaamano@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "ffernand@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "obraunsh@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "rravaiol@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "bpickard@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+        "dougsland@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
+}
+
+# random numbers to weight severity, 10 is max and 1 is low
+severity_weight = {
+        'urgent': 10,
+        'high': 5,
+        'medium': 3,
+        'low': 1,
+        'unspecified': 1
+}
+
+# random numbers to weight priority, 100 is max and 1 is low
+priority_weight = {
+        'urgent': 100,
+        'high': 30,
+        'medium': 10,
+        'low': 5,
+        'unspecified': 1
+}
+
+# Status we are looking for:
+#   - NEW: Bug need to be triagged, work not started
+#
+#   - ASSIGNED: Bug has been triagged and developer started working
+#
+#   - POST: Bug has a possible solution and the patch is under review.
+#           ATTENTION: might need developer rework the solution
+#
+#   - MODIFIED: patch has being commited upstream/downstream
+#               usually errata moves to ON_QA
+#
+#   - ON_QA: QA needs to review/approve the solution
+#
+query["bug_status"] = ["ASSIGNED", "NEW", "POST"]
+
+# Bugzilla has a limit max of return, setting no limit
+query["limit"] = 0
+
+t1 = time.time()
+bugs = bzapi.query(query)
+t2 = time.time()
+print("Found %d bugs with our query" % len(bugs))
+print("Query processing time: %s" % (t2 - t1))
+
+for bug in bugs:
+    if bug.assigned_to not in developer:
+        continue
+
+    if bug.status == "NEW":
+        developer[bug.assigned_to]["bz_in_new"] += 1
+
+    if bug.status == "ASSIGNED":
+        developer[bug.assigned_to]["bz_in_assigned"] += 1
+
+    if bug.status == "POST":
+        developer[bug.assigned_to]["bz_in_post"] += 1
+
+    developer[bug.assigned_to]["number_of_bz"] += 1
+    developer[bug.assigned_to]["bz_urls"].append(
+            "https://bugzilla.redhat.com/show_bug.cgi?id=" + str(bug.id))
+    developer[bug.assigned_to]["points"] += (
+            severity_weight[bug.severity] + priority_weight[bug.priority])
+
+# Sorting the list by points field
+ordered_by_points = OrderedDict(
+        sorted(developer.items(), key=lambda x: x[1]['points']))
+
+# Rank list starts with 1, which means developer with less overloaded at moment
+rank = 1
+
+print("Rank of developer less overloaded at moment:")
+print("=================================================")
+for k, v in list(ordered_by_points.items()):
+    print("#%s Developer: %s" % (rank, k))
+    print("  Number of Bugs:", v['number_of_bz'])
+    print("  Number of Bugs as ASSIGNED:", v['bz_in_new'])
+    print("  Number of Bugs as NEW:", v['bz_in_assigned'])
+    print("  Number of Bugs as POST:", v['bz_in_post'])
+    print("  BugUrls:", v['bz_urls'])
+    print("")
+    rank += 1
+
+print("Bugzilla status chart:")
+print("===========================+")
+print(" - NEW: Bug need to be triagged, work not started.\n")
+print(" - ASSIGNED: Bug has been triagged and developer started working.\n")
+print(" - POST: Bug has a possible solution and the patch is under review.")
+print("\t ATTENTION: might need developer rework the solution.\n")
+print(" - MODIFIED: patch has being commited upstream/downstream")
+print("\t usually ERRATA system moves to ON_QA\n")
+print(" - ON_QA: QA needs to review/test/approve the solution\n")
