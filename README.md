@@ -22,23 +22,28 @@ api_key=pMqSdofimCiHqqq11113rr           <----- Long string generated once in th
 
 ## Setting env
 ```
-$ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugzilla
-$ python3 -m venv env && source ./env/bin/activate
-$ pip install --upgrade pip
-$ pip install .
-$ pip list
-Package            Version
------------------- ---------
-certifi            2021.10.8
-charset-normalizer 2.0.12
-idna               3.3
-pip                22.0.4
-python-bugzilla    3.2.0
-requests           2.27.1
-setuptools         53.0.0
-urllib3            1.26.9
+$ pushd .
+
+$ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugzilla && \
+  python3 -m venv env && source ./env/bin/activate && \
+  pip install --upgrade pip && \
+  pip install . && \
+  pip list | grep python-bugzilla && \
+  echo ok
+
+$ popd
 ```
 
+## Query Networking Bugs Script
+```
+$ [ -e ./python-bugzilla/env/bin/activate ] && {
+  source ./python-bugzilla/env/bin/activate
+  export PYTHONPATH="${PWD}/python-bugzilla"
+  ./list_less_overloaded
+} || >&2 echo "Wrong dir or env not set"
+```
+
+    
 ## Bashing
 ```
 $ cd python-bugzilla
