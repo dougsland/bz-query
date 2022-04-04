@@ -1,6 +1,6 @@
 # Quick documentation
 - [First Steps](#first-steps)
-  * [Querying via bugzillacli](#querying-via-bugzillacli)
+  * [Querying via bugzilla-cli](#querying-via-bugzilla-cli)
   * [Bashing](#bashing)
   * [Pythonic](#pythonic)
     + [Setting env](#setting-env)
@@ -17,7 +17,7 @@ Go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Ke
 As soon you click: "**Generate the API-key**" a long string will be generated with chars and numbers, COPY as it's only displayed **ONCE**.
 
 
-## Querying via bugzillacli
+## Querying via bugzilla cli
 Querying bugs for ovn-kubernetes in **NEW status**
 ```
 ./bugzilla-cli query --product "OpenShift Container Platform"  --component Networking --sub-component ovn-kubernetes --status NEW
