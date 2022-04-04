@@ -23,13 +23,20 @@ api_key=pMqSdofimCiHqqq11113rr           <----- Long string generated once in th
 ## Setting env
 ```
 $ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugzilla
-Cloning into 'python-bugzilla'...
-remote: Enumerating objects: 6308, done.
-remote: Counting objects: 100% (246/246), done.
-remote: Compressing objects: 100% (166/166), done.
-remote: Total 6308 (delta 144), reused 148 (delta 75), pack-reused 6062
-Receiving objects: 100% (6308/6308), 1.40 MiB | 3.81 MiB/s, done.
-Resolving deltas: 100% (4285/4285), done.
+$ python3 -m venv env && source ./env/bin/activate
+$ pip install --upgrade pip
+$ pip install .
+$ pip list
+Package            Version
+------------------ ---------
+certifi            2021.10.8
+charset-normalizer 2.0.12
+idna               3.3
+pip                22.0.4
+python-bugzilla    3.2.0
+requests           2.27.1
+setuptools         53.0.0
+urllib3            1.26.9
 ```
 
 ## Bashing
