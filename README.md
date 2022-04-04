@@ -1,8 +1,8 @@
 # Quick documentation
 - [First Steps](#first-steps)
-  * [Setting env](#setting-env)
   * [Bashing](#bashing)
   * [Pythonic](#pythonic)
+    + [Setting env](#setting-env)
     + [Query Networking Bugs Script](#query-networking-bugs-script)
   * [Querying via bugzillacli](#querying-via-bugzillacli)
 
@@ -10,7 +10,8 @@ This is quick notes page as reference for useing `bugzilla-cli` command line.
 **bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
 
 ## First Steps
-First, go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Keys**.  
+First, generate the `api key` to communicate with bugzilla using `python-bugzilla` module.  
+Go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Keys**.  
 
 **ATENTION:**  
 As soon you click: "**Generate the API-key**" a long string will be generated with chars and numbers, COPY as it's only displayed **ONCE**.
@@ -22,7 +23,8 @@ $ cat bugzillarc
 api_key=pMqSdofimCiHqqq11113rr           <----- Long string generated once in the step above.
 ```
 
-## Setting env
+## Pythonic
+### Setting env
 ```
 $ pushd .
 
@@ -36,7 +38,6 @@ $ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugz
 $ popd
 ```
 
-## Pythonic
 ### Query Networking Bugs Script
 ```
 $ [ -e ./python-bugzilla/env/bin/activate ] && {
