@@ -6,7 +6,7 @@
     + [Setting env](#setting-env)
     + [Query Networking Bugs Script](#query-networking-bugs-script)
 
-This is quick notes page as reference for useing `bugzilla-cli` command line.  
+This is quick notes page as reference for using `bugzilla-cli` command line and python-bugzilla project.  
 **bugzilla-cli** project is available at: https://github.com/python-bugzilla/python-bugzilla
 
 ## First Steps
