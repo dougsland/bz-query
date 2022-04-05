@@ -23,6 +23,7 @@ query = bzapi.build_query(
                     "creation_time",
                     "component",
                     "sub_component",
+                    "target_release",
                     "summary",
                     "status"])
 # uncomment if looking for specific ovn-kubernetes
@@ -165,6 +166,14 @@ developer = {
             "bz_in_post": 0,
             "bz_urls": []
         },
+        "bnemec@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
 }
 
 # random numbers to weight severity, 10 is max and 1 is low
@@ -215,6 +224,7 @@ for bug in bugs:
                     "creationdate": creation_time,
                     "status": bug.status,
                     "component": bug.component,
+                    "target_release": bug.target_release,
                     "sub_component": bug.sub_component
             }
             count_bugs_new_status_more_than_10days += 1
@@ -242,6 +252,7 @@ for k,v in bugs_new_state_more_than_10days.items():
     print("Summary: %s" % v['summary'])
     print("  Creation date: %s" % v['creationdate'])
     print("  Status: %s" % v['status'])
+    print("  Target Release: %s" % v['target_release'])
     print("  Component: %s" % v['component'])
     print("  Sub-Component: %s" % v['sub_component'])
     print("  Bug URL: %s\n" % v['url'])
