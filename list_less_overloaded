@@ -2,7 +2,13 @@
 import time
 import bugzilla
 
+from datetime import datetime, timedelta, date
 from collections import OrderedDict
+
+class colors:
+    HEADER = '\033[93m'
+    END = '\033[0m'
+    BOLD = '\033[1m'
 
 URL = "bugzilla.redhat.com"
 bzapi = bugzilla.Bugzilla(URL)
@@ -14,6 +20,10 @@ query = bzapi.build_query(
                     "priority",
                     "severity",
                     "assigned_to",
+                    "creation_time",
+                    "component",
+                    "sub_component",
+                    "summary",
                     "status"])
 # uncomment if looking for specific ovn-kubernetes
 # sub_component="ovn-kubernetes")
@@ -170,12 +180,26 @@ t2 = time.time()
 print("Found %d bugs with our query" % len(bugs))
 print("Query processing time: %s" % (t2 - t1))
 
+bugs_new_state_more_than_10days = {}
+
 for bug in bugs:
     if bug.assigned_to not in developer:
         continue
 
     if bug.status == "NEW":
         developer[bug.assigned_to]["bz_in_new"] += 1
+
+        # Bugs in NEW state for more than 10 days
+        creation_time = datetime.strptime(str(bug.creation_time), '%Y%m%dT%H:%M:%S')
+        if ((creation_time + timedelta(days=10)) <= datetime.now()):
+            bugs_new_state_more_than_10days[bug.id] = {
+                    "summary": bug.summary,
+                    "url": "https://bugzilla.redhat.com/show_bug.cgi?id=" + str(bug.id),
+                    "creationdate": creation_time,
+                    "status": bug.status,
+                    "component": bug.component,
+                    "sub_component": bug.sub_component
+            }
 
     if bug.status == "ASSIGNED":
         developer[bug.assigned_to]["bz_in_assigned"] += 1
@@ -196,8 +220,8 @@ ordered_by_points = OrderedDict(
 # Rank list starts with 1, which means developer with less overloaded at moment
 rank = 1
 
-print("Rank of developer less overloaded at moment:")
-print("=================================================")
+print(colors.HEADER + "\nRank of developer less overloaded [AT THIS MOMENT %s]:" % date.today() + colors.END)
+print(colors.BOLD + "=================================================" + colors.END)
 for k, v in list(ordered_by_points.items()):
     print("#%s Developer: %s" % (rank, k))
     print("  Number of Bugs:", v['number_of_bz'])
@@ -208,15 +232,26 @@ for k, v in list(ordered_by_points.items()):
     print("")
     rank += 1
 
-print("Bugzilla status chart:")
-print("===========================+")
-print(" - NEW: Bug need to be triagged, work not started.\n")
-print(" - ASSIGNED: Bug has been triagged and developer started working.\n")
-print(" - POST: Bug has a possible solution and the patch is under review.")
-print("\t ATTENTION: might need developer rework the solution.\n")
-print(" - MODIFIED: patch has being commited upstream/downstream")
-print("\t usually ERRATA system moves to ON_QA as soon the Bugzilla report",
-      "is attached to an Errata ticket.\n")
-print(" - ON_QE: Quality Engineers need to test and verify the solution",
-      "worked and as soon they move the bug to **VERIFIED**, Errata system",
-      "can schedule and  **SHIP** to final users\n")
+# print("Bugzilla status chart:")
+# print("===========================+")
+# print(" - NEW: Bug need to be triagged or work not started.\n")
+# print(" - ASSIGNED: Bug has been triagged and developer started working.\n")
+# print(" - POST: Bug has a possible solution and the patch is under review.")
+# print("\t ATTENTION: might need developer rework the solution.\n")
+# print(" - MODIFIED: patch has being commited upstream/downstream")
+# print("\t usually ERRATA system moves to ON_QA as soon the Bugzilla report",
+#      "is attached to an Errata ticket.\n")
+# print(" - ON_QE: Quality Engineers need to test and verify the solution",
+#      "worked and as soon they move the bug to **VERIFIED**, Errata system",
+#      "can schedule and  **SHIP** to final users\n")
+
+print(colors.HEADER + "Bugs in NEW state for more than 10 days:" + colors.END)
+print(colors.HEADER + "Good candidates for needinfo to owner asking if need help or find another assignee" + colors.END)
+print(colors.BOLD + "================================================" + colors.END)
+for k,v in bugs_new_state_more_than_10days.items():
+    print("Summary: %s" % v['summary'])
+    print("  Creation date: %s" % v['creationdate'])
+    print("  Status: %s" % v['status'])
+    print("  Component: %s" % v['component'])
+    print("  Sub-Component: %s" % v['sub_component'])
+    print("  Bug URL: %s\n" % v['url'])
