@@ -102,7 +102,7 @@ $ popd
 $ [ -e ./python-bugzilla/env/bin/activate ] && {
   source ./python-bugzilla/env/bin/activate
   export PYTHONPATH="${PWD}/python-bugzilla"
-  ./list_less_overloaded
+  ./network_bugs_overview
 } || >&2 echo "Wrong dir or env not set"
 ```
 ### Documentation
