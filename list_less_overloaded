@@ -215,5 +215,7 @@ print(" - ASSIGNED: Bug has been triagged and developer started working.\n")
 print(" - POST: Bug has a possible solution and the patch is under review.")
 print("\t ATTENTION: might need developer rework the solution.\n")
 print(" - MODIFIED: patch has being commited upstream/downstream")
-print("\t usually ERRATA system moves to ON_QA as soon the Bugzilla report is attached to an Errata ticket.\n")
-print(" - ON_QE: Quality Engineers needs to review/test/approve the solution and as soon the bug moves to **VERIFIED**, Errata system can **SHIP** to final users\n")
+print("\t usually ERRATA system moves to ON_QA as soon the Bugzilla report",
+      "is attached to an Errata ticket.\n")
+print(" - ON_QE: Quality Engineers need to test and verify the solution ",
+      "worked and as soon they move the bug to **VERIFIED**, Errata system can schedule and  **SHIP** to final users\n")
