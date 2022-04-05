@@ -181,6 +181,7 @@ print("Found %d bugs with our query" % len(bugs))
 print("Query processing time: %s" % (t2 - t1))
 
 bugs_new_state_more_than_10days = {}
+count_bugs_new_status_more_than_10days = 0
 
 for bug in bugs:
     if bug.assigned_to not in developer:
@@ -200,6 +201,7 @@ for bug in bugs:
                     "component": bug.component,
                     "sub_component": bug.sub_component
             }
+            count_bugs_new_status_more_than_10days += 1
 
     if bug.status == "ASSIGNED":
         developer[bug.assigned_to]["bz_in_assigned"] += 1
@@ -245,7 +247,7 @@ for k, v in list(ordered_by_points.items()):
 #      "worked and as soon they move the bug to **VERIFIED**, Errata system",
 #      "can schedule and  **SHIP** to final users\n")
 
-print(colors.HEADER + "Bugs in NEW state for more than 10 days:" + colors.END)
+print(colors.HEADER + "Bugs in NEW state for more than 10 days: %s" % count_bugs_new_status_more_than_10days + colors.END)
 print(colors.HEADER + "Good candidates for needinfo to owner asking if need help or find another assignee" + colors.END)
 print(colors.BOLD + "================================================" + colors.END)
 for k,v in bugs_new_state_more_than_10days.items():
