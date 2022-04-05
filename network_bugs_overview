@@ -31,22 +31,6 @@ query = bzapi.build_query(
 # sub_component="ovn-kubernetes")
 
 developer = {
-        "pliu@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "vrutkovs@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
         "mcambria@redhat.com": {
             "points": 0,
             "number_of_bz": 0,
@@ -56,14 +40,6 @@ developer = {
             "bz_urls": []
         },
         "jtanenba@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "fpaoline@redhat.com": {
             "points": 0,
             "number_of_bz": 0,
             "bz_in_new": 0,
