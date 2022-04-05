@@ -5,6 +5,7 @@
   * [Pythonic](#pythonic)
     + [Setting env](#setting-env)
     + [Query Networking Bugs Script](#query-networking-bugs-script)
+    + [Documentation](#documentation)
 
 This is quick notes page as reference for using `bugzilla-cli` command line.  
 `bugzilla-cli` is based on [python-bugzilla project](https://github.com/python-bugzilla/python-bugzilla) which we will use for some `specific queries` as well.
@@ -104,3 +105,5 @@ $ [ -e ./python-bugzilla/env/bin/activate ] && {
   ./list_less_overloaded
 } || >&2 echo "Wrong dir or env not set"
 ```
+### Documentation
+https://bugzilla.readthedocs.io/en/latest/api/core/v1/bug.html#search-bugs
