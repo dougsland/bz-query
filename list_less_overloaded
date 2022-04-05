@@ -218,4 +218,5 @@ print(" - MODIFIED: patch has being commited upstream/downstream")
 print("\t usually ERRATA system moves to ON_QA as soon the Bugzilla report",
       "is attached to an Errata ticket.\n")
 print(" - ON_QE: Quality Engineers need to test and verify the solution ",
-      "worked and as soon they move the bug to **VERIFIED**, Errata system can schedule and  **SHIP** to final users\n")
+      "worked and as soon they move the bug to **VERIFIED**, Errata system",
+      "can schedule and  **SHIP** to final users\n")
