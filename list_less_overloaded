@@ -159,19 +159,6 @@ priority_weight = {
         'unspecified': 1
 }
 
-# Status we are looking for:
-#   - NEW: Bug need to be triagged, work not started
-#
-#   - ASSIGNED: Bug has been triagged and developer started working
-#
-#   - POST: Bug has a possible solution and the patch is under review.
-#           ATTENTION: might need developer rework the solution
-#
-#   - MODIFIED: patch has being commited upstream/downstream
-#               usually errata moves to ON_QA
-#
-#   - ON_QA: QA needs to review/approve the solution
-#
 query["bug_status"] = ["ASSIGNED", "NEW", "POST"]
 
 # Bugzilla has a limit max of return, setting no limit
@@ -228,5 +215,5 @@ print(" - ASSIGNED: Bug has been triagged and developer started working.\n")
 print(" - POST: Bug has a possible solution and the patch is under review.")
 print("\t ATTENTION: might need developer rework the solution.\n")
 print(" - MODIFIED: patch has being commited upstream/downstream")
-print("\t usually ERRATA system moves to ON_QA\n")
-print(" - ON_QA: QA needs to review/test/approve the solution\n")
+print("\t usually ERRATA system moves to ON_QA as soon the Bugzilla report is attached to an Errata.\n")
+print(" - ON_QE: Quality Engineers needs to review/test/approve the solution and as soont the bug moves to **VERIFIED** Errata system can **SHIP** to final users\n")
