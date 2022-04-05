@@ -149,6 +149,14 @@ developer = {
             "bz_in_post": 0,
             "bz_urls": []
         },
+        "surya@redhat.com": {
+            "points": 0,
+            "number_of_bz": 0,
+            "bz_in_new": 0,
+            "bz_in_assigned": 0,
+            "bz_in_post": 0,
+            "bz_urls": []
+        },
 }
 
 # random numbers to weight severity, 10 is max and 1 is low
