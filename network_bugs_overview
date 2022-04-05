@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import time
 import bugzilla
+import sys
 
 from datetime import datetime, timedelta, date
 from collections import OrderedDict
@@ -245,17 +246,21 @@ for bug in bugs:
 ordered_by_points = OrderedDict(
         sorted(developer.items(), key=lambda x: x[1]['points']))
 
-print(colors.HEADER + "\nBugs in NEW state for more than 10 days: %s" % count_bugs_new_status_more_than_10days + colors.END)
-print(colors.HEADER + "Good candidates for needinfo to owner asking if need help or find another assignee" + colors.END)
-print(colors.BOLD + "================================================" + colors.END)
-for k,v in bugs_new_state_more_than_10days.items():
-    print("Summary: %s" % v['summary'])
-    print("  Creation date: %s" % v['creationdate'])
-    print("  Status: %s" % v['status'])
-    print("  Target Release: %s" % v['target_release'])
-    print("  Component: %s" % v['component'])
-    print("  Sub-Component: %s" % v['sub_component'])
-    print("  Bug URL: %s\n" % v['url'])
+
+if len(sys.argv) == 2 and "old-bugs" in sys.argv[1]:
+    print(colors.HEADER + "\nBugs in NEW state for more than 10 days: %s" % count_bugs_new_status_more_than_10days + colors.END)
+    print(colors.HEADER + "Good candidates for needinfo to owner asking if need help or find another assignee" + colors.END)
+    print(colors.BOLD + "================================================" + colors.END)
+    for k,v in bugs_new_state_more_than_10days.items():
+        print("Summary: %s" % v['summary'])
+        print("  Creation date: %s" % v['creationdate'])
+        print("  Status: %s" % v['status'])
+        print("  Target Release: %s" % v['target_release'])
+        print("  Component: %s" % v['component'])
+        print("  Sub-Component: %s" % v['sub_component'])
+        print("  Bug URL: %s\n" % v['url'])
+
+    sys.exit(0)
 
 # Rank list starts with 1, which means developer with less overloaded at moment
 rank = 1

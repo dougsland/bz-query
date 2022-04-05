@@ -103,6 +103,7 @@ $ [ -e ./python-bugzilla/env/bin/activate ] && {
   source ./python-bugzilla/env/bin/activate
   export PYTHONPATH="${PWD}/python-bugzilla"
   ./network_bugs_overview
+  ./network_bugs_overview --old-bugs
 } || >&2 echo "Wrong dir or env not set"
 ```
 ### Documentation
