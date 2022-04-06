@@ -8,7 +8,8 @@ bzapi = bugzilla.Bugzilla(URL)
 query = bzapi.build_query(
     product="OpenShift Container Platform",
     component="Networking",
-    sub_component="ovn-kubernetes")
+    sub_component="ovn-kubernetes",
+)
 
 query["status"] = "NEW"
 
