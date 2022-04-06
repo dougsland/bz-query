@@ -30,152 +30,36 @@ query = bzapi.build_query(
 # uncomment if looking for specific ovn-kubernetes
 # sub_component="ovn-kubernetes")
 
-developer = {
-        "mcambria@redhat.com": {
+rh_developers = [
+    "akaris",
+    "bpickard",
+    "bbennett",
+    "bnemec",
+    "cdc",
+    "cstabler",
+    "dougsland",
+    "ffernand",
+    "jcaamano",
+    "jluhrsen",
+    "jtanenba",
+    "mcambria",
+    "mkennell",
+    "mmahmoud",
+    "npinaeva",
+    "obraunsh",
+    "pdiak",
+    "rravaiol",
+    "surya",
+    ]
+
+developer = dict([(f"{d}@redhat.com", {
             "points": 0,
             "number_of_bz": 0,
             "bz_in_new": 0,
             "bz_in_assigned": 0,
             "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "jtanenba@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "jluhrsen@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "cstabler@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "dcbw@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "trozet@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "jcaamano@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "ffernand@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "obraunsh@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "rravaiol@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "bpickard@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "dougsland@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "surya@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "bbennett@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "bnemec@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "mmahmoud@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "npinaeva@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-        "ccallend@redhat.com": {
-            "points": 0,
-            "number_of_bz": 0,
-            "bz_in_new": 0,
-            "bz_in_assigned": 0,
-            "bz_in_post": 0,
-            "bz_urls": []
-        },
-}
+            "bz_urls": [],
+}) for d in rh_developers])
 
 # random numbers to weight severity, 10 is max and 1 is low
 severity_weight = {
