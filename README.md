@@ -17,6 +17,12 @@ Go to https://bugzilla.redhat.com and click: **Username -> Preferences -> API Ke
 **ATENTION:**  
 As soon you click: "**Generate the API-key**" a long string will be generated with chars and numbers, COPY as it's only displayed **ONCE**.
 
+```
+$ mkdir -p ~/.config/python-bugzilla/ && cd ~/.config/python-bugzilla/ 
+$ cat bugzillarc
+[bugzilla.redhat.com]
+api_key=pMqSdofimCiHqqq11113rr           <----- Long string generated once in the step above.
+```
 
 ## Querying via bugzilla cli
 Querying bugs for ovn-kubernetes in **NEW status**
@@ -73,13 +79,6 @@ python-bugzilla> ./netquery
 The developer foobar@email.com has 1 assigned  
 The developer devnull@email.com has 2 assigned  
 The developer supercar@email.com has 2 assigned  
-```
-
-```
-$ mkdir -p ~/.config/python-bugzilla/ && cd ~/.config/python-bugzilla/ 
-$ cat bugzillarc
-[bugzilla.redhat.com]
-api_key=pMqSdofimCiHqqq11113rr           <----- Long string generated once in the step above.
 ```
 
 ## Pythonic
