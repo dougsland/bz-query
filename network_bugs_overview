@@ -172,9 +172,10 @@ print(
 )
 for k, v in list(ordered_by_points.items()):
     print("#%s Developer: %s" % (rank, k))
+    print("  Rank Points:", v["points"])
     print("  Number of Bugs:", v["number_of_bz"])
-    print("  Number of Bugs as ASSIGNED:", v["bz_in_new"])
-    print("  Number of Bugs as NEW:", v["bz_in_assigned"])
+    print("  Number of Bugs as NEW:", v["bz_in_new"])
+    print("  Number of Bugs as ASSIGNED:", v["bz_in_assigned"])
     print("  Number of Bugs as POST:", v["bz_in_post"])
     print("  BugUrls:", v["bz_urls"])
     print("")
