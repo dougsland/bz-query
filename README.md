@@ -83,17 +83,22 @@ The developer supercar@email.com has 2 assigned
 
 ## Pythonic
 ### Setting env
+First, make sure to create an api key for bugzilla, use steps provided [here](#first-steps).
+With the `api key` registered and set, follow the steps:
+
 ```
 $ pushd .
-
 $ git clone https://github.com/python-bugzilla/python-bugzilla && cd python-bugzilla && \
   python3 -m venv env && source ./env/bin/activate && \
   pip install --upgrade pip && \
   pip install . && \
   pip list | grep python-bugzilla && \
   echo ok
-
 $ popd
+
+$ git clone https://github.com/dougsland/bz-query && cd bz-query
+$ ./network_bugs_overview
+
 ```
 
 ### Query Networking Bugs Script
