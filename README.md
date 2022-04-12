@@ -83,8 +83,8 @@ The developer supercar@email.com has 2 assigned
 
 ## Pythonic
 ### Setting env
-First, make sure to create an api key for bugzilla, use steps provided [here](#first-steps).  
-With the `api key` registered and set, follow the steps:  
+First, make sure to create an **api key** for bugzilla, use steps provided [here](#first-steps).  
+With the `api key` registered and set in `~/.config/python-bugzilla/bugzillarc`, follow the steps:  
 
 ```
 $ pushd .
