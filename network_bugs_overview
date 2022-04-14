@@ -55,6 +55,7 @@ rh_developers = [
     "pdiak",
     "rravaiol",
     "surya",
+    "trozet",
 ]
 
 developer = dict(
@@ -64,6 +65,9 @@ developer = dict(
             {
                 "points": 0,
                 "number_of_bz": 0,
+                "number_of_ovnk_bz": 0,
+                "number_of_osdn_bz": 0,
+                "number_of_others_bz": 0,
                 "bz_in_new": 0,
                 "bz_in_assigned": 0,
                 "bz_in_post": 0,
@@ -122,6 +126,13 @@ for bug in bugs:
         developer[bug.assigned_to]["bz_in_post"] += 1
 
     developer[bug.assigned_to]["number_of_bz"] += 1
+    if bug.sub_component == "ovn-kubernetes":
+        developer[bug.assigned_to]["number_of_ovnk_bz"] += 1
+    elif  bug.sub_component == "openshift-sdn":
+        developer[bug.assigned_to]["number_of_osdn_bz"] += 1
+    else:
+        developer[bug.assigned_to]["number_of_others_bz"] += 1
+
     developer[bug.assigned_to]["bz_urls"].append(
         "https://bugzilla.redhat.com/show_bug.cgi?id=" + str(bug.id)
     )
@@ -174,6 +185,9 @@ for k, v in list(ordered_by_points.items()):
     print("#%s Developer: %s" % (rank, k))
     print("  Rank Points:", v["points"])
     print("  Number of Bugs:", v["number_of_bz"])
+    print("  Number of OVNK Bugs:", v["number_of_ovnk_bz"])
+    print("  Number of OSDN Bugs:", v["number_of_osdn_bz"])
+    print("  Number of other comp Bugs:", v["number_of_others_bz"])
     print("  Number of Bugs as NEW:", v["bz_in_new"])
     print("  Number of Bugs as ASSIGNED:", v["bz_in_assigned"])
     print("  Number of Bugs as POST:", v["bz_in_post"])
