@@ -38,11 +38,10 @@ query = bzapi.build_query(
 rh_developers = [
     "akaris",
     "bpickard",
-    "bbennett",
-    "bnemec",
+    # "bnemec",
     "cdc",
-    "cstabler",
-    "dougsland",
+    # "cstabler",
+    # "dougsland",
     "ffernand",
     "jcaamano",
     "jluhrsen",
@@ -53,9 +52,9 @@ rh_developers = [
     "npinaeva",
     "obraunsh",
     "pdiak",
+    "pepalani",
     "rravaiol",
     "surya",
-    "trozet",
 ]
 
 developer = dict(
