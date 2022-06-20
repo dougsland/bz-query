@@ -37,6 +37,7 @@ query = bzapi.build_query(
 
 rh_developers = [
     "akaris",
+    "arsen",
     "bpickard",
     # "bnemec",
     # "cstabler",
@@ -46,6 +47,7 @@ rh_developers = [
     "jluhrsen",
     "jtanenba",
     "mcambria",
+    "mduarted",
     "mkennell",
     "mmahmoud",
     "npinaeva",
