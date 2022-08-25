@@ -2,6 +2,8 @@
 import argparse
 import collections
 from datetime import date, datetime, timedelta
+import sys
+from tabulate import tabulate
 import time
 
 import bugzilla
@@ -50,7 +52,7 @@ SEVERITY_WEIGHTS = {
     "important": 5,
     "moderate": 3,
     "informational": 1,
-    # None: 1,
+    None: 1,
 }
 
 # arbitrary numbers to weight priority, 100 is max and 1 is low
@@ -79,8 +81,8 @@ JIRA_BUGS = "jira_bugs"
 JIRA_ESCALATIONS = "jira_escalations"
 
 GENERIC_COMPONENT = "networking"
-SDN_COMPONENT = "networking/openshift-sdn"
-OVN_COMPONENT = "networking/ovn-kubernetes"
+SDN_COMPONENT = "networking / openshift-sdn"
+OVN_COMPONENT = "networking / ovn-kubernetes"
 ESCALATIONS_COMPONENT = "networking/sdn"
 
 
@@ -181,10 +183,10 @@ def init_jira_query_for_escalations():
 def init_jira_query(project, components):
     if isinstance(components, str):
         components = (components,)  # make it a tuple
-    #   new, assigned, on_dev, post, on_qa, verified, modified, in progress, release_pending, closed
+    #   new, assigned, on_dev, post, on_qa, verified, modified, release_pending, closed
     query_fmt = (
         "project={} and component in ({}) and "
-        'status in ("NEW", "ASSIGNED", "POST", "ON_DEV", "In Progress")'
+        'status in ("NEW", "ASSIGNED", "POST", "ON_DEV")'
     )
     component_substr = ", ".join(('"{}"'.format(c) for c in components))
     bugs_query = query_fmt.format(project, component_substr)
@@ -216,10 +218,20 @@ def run_bz_query(bz_api, query_str):
 @time_query
 def run_jira_query(jira_api, query):
     res = []
-    try:
-        res = jira_api.search_issues(query, maxResults=False)
-    except Exception as e:
-        print("Error running JIRA query {}, error: {}".format(query, e))
+    # jira server is highly unreliable
+    # try querying it 100 times and then give up
+    max_attempts = 100
+    for i in range(max_attempts):
+        try:
+            res = jira_api.search_issues(query, maxResults=False)
+        except Exception as e:
+            print("[attempt {}] Error running JIRA query {}, error: {}".format(i, query, e))
+            time.sleep(0.05)
+            if i == max_attempts-1:
+                sys.exit("Could not query JIRA server successfully after {} attempts".format(max_attempts))
+        else:
+            print("JIRA query was successful at attempt={}".format(i))
+            break
     return res
 
 
@@ -308,7 +320,8 @@ def process_jira_bugs(bugs, developers):
         assignee = bug.get_field("assignee").name if bug.get_field("assignee") else None
         if not assignee:
             continue
-        # values for status: new, assigned, on_dev, post, on_qa, verified, modified, in progress, release_pending, closed
+        # values for status: new, assigned, on_dev, post, on_qa, verified, modified,
+        # release_pending, closed
         status = bug.get_field("status").name.lower()
         bug_id = str(bug.id)
         creation_time = bug.get_field("created")
@@ -318,14 +331,23 @@ def process_jira_bugs(bugs, developers):
         fix_versions = [
             v.name for v in bug.get_field("fixVersions")
         ]  # TODO maybe just take the 0th element...
-        url = ("https://issues.redhat.com/browse/" + str(bug_key),)
+        url = "https://issues.redhat.com/browse/" + str(bug_key)
         priority = bug.get_field("priority").name.lower()
         severity = None
         # TODO not sure today what escalated jira issues in OCPBUGS project
         # will look like. For now OCPBUGS escalations are not taken into account.
         # escalations have no severity field
         if ESCALATIONS_COMPONENT not in components:
-            severity = bug.get_field("customfield_12316142").value.lower()
+            try:
+                severity = bug.get_field("customfield_12316142")
+                if severity is not None:
+                    severity = severity.value.lower()
+
+            except Exception as e:
+                print("Could not correctly retrieve severity for bug {},"
+                      " considering it as 'unspecified'. Error: {}, severity: {}".format(
+                          bug, e, severity))
+                severity = 'unspecified'
 
         if assignee not in developers:
             continue
@@ -347,7 +369,7 @@ def process_jira_bugs(bugs, developers):
                     "sub_component": None,
                 }
 
-        elif status in ("assigned", "on_dev", "in progress"):
+        elif status in ("assigned", "on_dev"):
             # not sure how the new values coexist with the old ones...
             developers[assignee]["bugs_in_assigned"] += 1
 
@@ -473,6 +495,37 @@ def print_results(developers, stale_bugs, print_stale_bugs=False):
     )
 
 
+def print_summary_table(developers
+                        ):
+    # Sorting the list by points field
+    ordered_by_points = collections.OrderedDict(
+        sorted(developers.items(), key=lambda x: x[1]["points"])
+    )
+    print(
+        colors.HEADER
+        + "\nRank of developers least overloaded (today) [%s]:" % date.today()
+        + colors.END
+    )
+    print(
+        colors.BOLD
+        + "========================================================"
+        + colors.END
+    )
+    # Rank list starts with 1, which means developer least overloaded at the moment
+    headers = ("#", "Developer", "Points", "Bugs", "NEW", "ASSIGNED", "POST")
+    lines = []
+    for rank, (k, v) in enumerate(ordered_by_points.items()):
+        new_line = (rank+1,
+                    k,
+                    v["points"],
+                    v["number_of_bugs"],
+                    v["bugs_in_new"],
+                    v["bugs_in_assigned"],
+                    v["bugs_in_post"])
+        lines.append(new_line)
+    print(tabulate(lines, headers=headers))
+
+
 def parse_input_args():
     parser = argparse.ArgumentParser()
     default_str = " By default, when no bug type is specified as input arg, bz and jira bugs are fetched, but not jira escalations."
@@ -490,6 +543,12 @@ def parse_input_args():
         "--jira-escalations",
         help=("run a query to jira server for jira escalations." + default_str),
         action="store_true",
+    )
+
+    parser.add_argument(
+        "-v", "--verbose",
+        help="Print detailed results",
+        action="store_true"
     )
 
     parser.add_argument(
@@ -520,6 +579,7 @@ def parse_input_args():
         "jira_bugs": jira_bugs,
         "jira_escalations": jira_escalations,
         "old-bugs": bool(args.old_bugs),
+        "verbose": bool(args.verbose)
     }
 
     return params
@@ -534,7 +594,10 @@ def main():
         jira_escalations=params.get("jira_escalations"),
     )
     developers, stale_bugs = process_bugs(bugs_dict, developers)
-    print_results(developers, stale_bugs, print_stale_bugs=params.get("old-bugs"))
+    if params.get("verbose"):
+        print_results(developers, stale_bugs, print_stale_bugs=params.get("old-bugs"))
+    else:
+        print_summary_table(developers)
 
 
 if __name__ == "__main__":
