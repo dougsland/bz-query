@@ -1,0 +1,3 @@
+python-bugzilla
+jira
+python-dateutil
