@@ -23,7 +23,6 @@ RH_DEVELOPERS = (
     "arsen",
     "bpickard",
     # "bnemec",
-    # "cstabler",
     # "dougsland",
     "ffernand",
     "jcaamano",
@@ -41,6 +40,10 @@ RH_DEVELOPERS = (
     "surya",
 )
 
+RH_DEVELOPERS_ALIASES = {
+    "sseethar": "surya@redhat.com",
+    "rh-ee-arsen": "arsen@redhat.com",
+}
 # arbitrary numbers to weight severity, 10 is max and 1 is low
 SEVERITY_WEIGHTS = {
     "urgent": 10,  # bugzilla
@@ -349,8 +352,25 @@ def process_jira_bugs(bugs, developers):
                           bug, e, severity))
                 severity = 'unspecified'
 
+        # an assignee in jira bugs is very often a developer's official email address, but
+        # it might also be just a username. On BZ aliases are the primary choice.
         if assignee not in developers:
-            continue
+            if "@" in assignee:
+                # skip this bug
+                continue
+            else:
+                # try with full email address if assignee is not in that form already
+                tmp_assignee = "{}@redhat.com".format(assignee)
+                if tmp_assignee in developers:
+                    assignee = tmp_assignee
+                else:
+                    # try with known aliases
+                    tmp_assignee = RH_DEVELOPERS_ALIASES.get(assignee)
+                    if tmp_assignee:
+                        assignee = tmp_assignee
+                    else:
+                        # no valid assignee found, skip this bug
+                        continue
 
         if status == "new":
             developers[assignee]["bugs_in_new"] += 1
