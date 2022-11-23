@@ -39,7 +39,6 @@ RH_DEVELOPERS = (
 
 RH_DEVELOPERS_ALIASES = {
     "sseethar": "surya@redhat.com",
-    "rh-ee-arsen": "arsen@redhat.com",
 }
 # arbitrary numbers to weight severity, 10 is max and 1 is low
 SEVERITY_WEIGHTS = {
