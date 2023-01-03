@@ -19,7 +19,6 @@ class colors:
 
 
 RH_DEVELOPERS = (
-    "akaris",
     "apanatto",
     "bpickard",
     # "bnemec",
