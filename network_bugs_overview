@@ -35,12 +35,14 @@ RH_DEVELOPERS = (
     "pdiak",
     "pepalani",
     "rravaiol",
-    "surya",
+    "sseethar",
 )
 
-RH_DEVELOPERS_ALIASES = {
-    "sseethar": "surya@redhat.com",
+ALIASES_TO_USERNAMES = {
+    # alias:  username
+    "surya": "sseethar",
 }
+
 # arbitrary numbers to weight severity, 10 is max and 1 is low
 SEVERITY_WEIGHTS = {
     "urgent": 10,  # bugzilla
@@ -214,11 +216,38 @@ def get_username_and_usermail_from_assignee(assignee):
     return username, usermail
 
 
+def get_username_and_usermail_from_alias(possible_alias):
+    # always return user,user@redhat.com regardless of whether
+    # possible_alias is a username or a usermail
+    # Useful for jira, where the usermail is most often, but not always,
+    # what appears as assignee for a bug.
+    alias, email_alias = get_username_and_usermail_from_assignee(possible_alias)
+    username = ALIASES_TO_USERNAMES.get(alias)
+    if username:
+        return get_username_and_usermail_from_assignee(username)
+    return None, None
+
+
+def get_alias_and_email_alias_from_username(username):
+    # always return user,user@redhat.com regardless of whether
+    # possible_alias is a username or a usermail
+    # Useful for jira, where the usermail is most often, but not always,
+    # what appears as assignee for a bug.
+    for alias_tmp, username_tmp in ALIASES_TO_USERNAMES.items():
+        if username_tmp == username:
+            alias, alias_email = get_username_and_usermail_from_assignee(alias_tmp)
+            return alias, alias_email
+    return None, None
+
+
 def init_jira_query_for_one_assignee(assignee):
     # include both username and username@redhat.com
-    assignee_tpl = 'assignee in ("{}", "{}") and '
     username, usermail = get_username_and_usermail_from_assignee(assignee)
-    query = assignee_tpl.format(username, usermail) + init_jira_query_for_bugs(open_only=False)
+    alias, email_alias = get_alias_and_email_alias_from_username(assignee)
+    all_usernames = [x for x in [username, usermail, alias, email_alias] if x]
+    assignee_tpl = 'assignee in ({}) and '
+    assignee_values = ', '.join('"{}"'.format(u) for u in all_usernames)  # (enclose within quotes)
+    query = assignee_tpl.format(assignee_values) + init_jira_query_for_bugs(open_only=False)
     return query
 
 
@@ -315,11 +344,19 @@ def process_bz_bugs(bugs, developers):
     # bugs that have been in new state for more than 30 days (arbitary time window)
     stale_bugs = {}
     for bug in bugs:
-        if bug.assigned_to not in developers:
-            continue
+        assignee_user, assignee_mail = get_username_and_usermail_from_assignee(bug.assigned_to)
+
+        if assignee_mail not in developers:
+            # check if it's a known alias and if so, get the official username
+            tmp_assignee, tmp_email = get_username_and_usermail_from_alias(assignee_user)
+            if tmp_email and tmp_email in developers:
+                assignee_user, assignee_mail = tmp_assignee, tmp_email
+            else:
+                # no valid assignee found, skip this bug
+                continue
 
         if bug.status == "NEW":
-            developers[bug.assigned_to]["bugs_in_new"] += 1
+            developers[assignee_mail]["bugs_in_new"] += 1
 
             # Bugs in NEW state for more than 30 days
             creation_time = datetime.strptime(str(bug.creation_time), "%Y%m%dT%H:%M:%S")
@@ -335,26 +372,26 @@ def process_bz_bugs(bugs, developers):
                 }
 
         elif bug.status == "ASSIGNED":
-            developers[bug.assigned_to]["bugs_in_assigned"] += 1
+            developers[assignee_mail]["bugs_in_assigned"] += 1
         elif bug.status == "POST":
-            developers[bug.assigned_to]["bugs_in_post"] += 1
+            developers[assignee_mail]["bugs_in_post"] += 1
 
-        developers[bug.assigned_to]["number_of_bugs"] += 1
+        developers[assignee_mail]["number_of_bugs"] += 1
 
         if bug.sub_component == "ovn-kubernetes":
-            developers[bug.assigned_to]["number_of_ovnk_bugs"] += 1
+            developers[assignee_mail]["number_of_ovnk_bugs"] += 1
         elif bug.sub_component == "openshift-sdn":
-            developers[bug.assigned_to]["number_of_osdn_bugs"] += 1
+            developers[assignee_mail]["number_of_osdn_bugs"] += 1
         else:
-            developers[bug.assigned_to]["number_of_other_bugs"] += 1
+            developers[assignee_mail]["number_of_other_bugs"] += 1
 
         if bug.cf_cust_facing.lower() == "yes":
-            developers[bug.assigned_to]["number_of_escalations"] += 1
+            developers[assignee_mail]["number_of_escalations"] += 1
 
-        developers[bug.assigned_to]["bugs_urls"].append(
+        developers[assignee_mail]["bugs_urls"].append(
             "https://bugzilla.redhat.com/show_bug.cgi?id=" + str(bug.id)
         )
-        developers[bug.assigned_to]["points"] += (
+        developers[assignee_mail]["points"] += (
             SEVERITY_WEIGHTS[bug.severity] + PRIORITY_WEIGHTS[bug.priority]
         )
     return developers, stale_bugs
@@ -447,17 +484,14 @@ def process_jira_bugs(bugs, developers, quick=False):
         # an assignee in jira bugs is very often a developer's official email address, but
         # it might also be just a username. On BZ aliases are the primary choice.
         if assignee_mail not in developers:
-            if "@" in assignee:
-                # skip this bug, assignee is not in the team
-                continue
+            # check if it's a known alias
+            tmp_assignee, tmp_email = get_username_and_usermail_from_alias(assignee_user)
+            if tmp_email and tmp_email in developers:
+                assignee_user, assignee_mail = tmp_assignee, tmp_email
             else:
-                # try with known aliases
-                tmp_assignee = RH_DEVELOPERS_ALIASES.get(assignee_user)
-                if tmp_assignee:
-                    assignee_user, assignee_mail = get_username_and_usermail_from_assignee(tmp_assignee)
-                else:
-                    # no valid assignee found, skip this bug
-                    continue
+                # no valid assignee found, skip this bug
+                continue
+
         if status == "new":
             developers[assignee_mail]["bugs_in_new"] += 1
             # Bugs in NEW state for more than 30 days
