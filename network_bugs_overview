@@ -20,7 +20,6 @@ class colors:
 
 
 RH_DEVELOPERS = (
-    "apanatto",
     "bpickard",
     # "bnemec",
     # "dougsland",
