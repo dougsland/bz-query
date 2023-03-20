@@ -20,7 +20,6 @@ class colors:
 
 
 RH_DEVELOPERS = (
-    "apanatto",
     "bpickard",
     # "bnemec",
     # "dougsland",
@@ -64,11 +63,11 @@ PRIORITY_WEIGHTS = {
     "medium": 10,
     "low": 5,
     "unspecified": 1,
-    "blocker": 150,  # jira
-    "critical": 100,
-    "major": 30,
+    "blocker": 10000,  # jira
+    "critical": 1000,
+    "major": 100,
     "normal": 10,
-    "minor": 5,
+    "minor": 1,
     "unprioritized": 1,
     "undefined": 1,
 }
@@ -528,9 +527,7 @@ def process_jira_bugs(bugs, developers, quick=False):
             developers[assignee_mail]["number_of_other_bugs"] += 1
 
         developers[assignee_mail]["bugs_urls"].append(url)
-        developers[assignee_mail]["points"] += (
-            SEVERITY_WEIGHTS[severity] + PRIORITY_WEIGHTS[priority]
-        )
+        developers[assignee_mail]["points"] += PRIORITY_WEIGHTS[priority]
 
     if not quick:
         # for each developer, issue a new query and count the number of
@@ -677,6 +674,17 @@ def print_summary_table(developers, quick=False):
             new_line.append(v["recently_assigned"])
         lines.append(new_line)
     print(tabulate(lines, headers=headers))
+
+    explanation_message = '''
+Points are calculated according to bug priority:
+- blocker:  {blocker}
+- critical:  {critical}
+- major:      {major}
+- normal:      {normal}
+- minor:        {minor}
+- undefined:    {undefined}
+'''.format(**PRIORITY_WEIGHTS)
+    print(explanation_message)
 
 
 def parse_input_args():
