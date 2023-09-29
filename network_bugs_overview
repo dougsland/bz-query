@@ -11,7 +11,7 @@ import bugzilla
 from dateutil import parser
 from jira.client import JIRA
 from jira_secrets import secrets
-
+import re
 
 class colors:
     HEADER = "\033[93m"
@@ -116,6 +116,16 @@ def init_developers_dict():
         ]
     )
     return developers
+
+
+def retrieve_unassigned_jira_bugs():
+    clients = init_clients(bz=False, jira_=True)
+    query = '(filter in ("SDN BZ filter", "SDN OCPBUGS") OR project = RHOCPPRIO AND component in ("networking/sdn") ' \
+            'OR project = SDN AND issuetype = Bug) AND filter in (Unresolved) AND ((project = OCPBUGSM OR project = ' \
+            'OCPBUGS) AND assignee = "bbennett@redhat.com" OR project = RHOCPPRIO AND assignee in (' \
+            '"anbhat@redhat.com", "vpickard@redhat.com") OR assignee is EMPTY) ORDER BY Rank DESC'
+    bugs = run_jira_query(clients[JIRA_KEY], query)
+    return bugs
 
 
 def retrieve_jira_bugs_for_given_dev(dev_name):
@@ -770,6 +780,9 @@ def main():
     else:
         print_summary_table(developers, params.get("quick"))
 
+    print("Notes:")
+    for bug in retrieve_unassigned_jira_bugs():
+        print("- [{0}](https://issues.redhat.com/browse/{0}) - {1}  ".format(bug, bug.get_field("summary")))
 
 if __name__ == "__main__":
     main()
